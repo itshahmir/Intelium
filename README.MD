@@ -1,9 +1,6 @@
 # Intelium: Universal Automation Framework
 
-<video width="100%" controls>
-  <source src="bandicam 2025-05-03 03-15-57-846.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+[![Intelium Preview](https://img.youtube.com/vi/OoZpDdprG1o/0.jpg)](https://youtu.be/OoZpDdprG1o)
 
 ## 🚀 Vision
 
