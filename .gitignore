@@ -126,4 +126,42 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
-cover/ 
+cover/
+
+# Media files
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.mkv
+*.webm
+*.gif
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.tiff
+*.ico
+*.psd
+*.ai
+*.eps
+
+# Bandicam specific
+bandicam*.mp4
+bandicam*.avi
+!bandicam 2025-05-03 03-15-57-846.mp4  # Exception for README preview
+
+# System files
+desktop.ini
+$RECYCLE.BIN/
+System Volume Information/
+*.lnk
+
+# Backup files
+*.bak
+*.backup
+*~
+*.old
+*.orig
+*.rej 

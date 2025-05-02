@@ -1,6 +1,6 @@
 # Intelium: Universal Automation Framework
 
-![Intelium Preview](preview.gif)
+![Intelium Preview](bandicam 2025-05-03 03-15-57-846.mp4)
 
 ## 🚀 Vision
 
