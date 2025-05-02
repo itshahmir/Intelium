@@ -15,7 +15,7 @@ import pyautogui
 from humancursor import SystemCursor
 from enum import Enum
 
-def get_image_size(file_path):
+def _get_image_dimensions(file_path):
     with open(file_path, "rb") as file:
         file.seek(16)
         width_bytes = file.read(4)
@@ -24,21 +24,20 @@ def get_image_size(file_path):
         height = struct.unpack(">I", height_bytes)[0]
         return (width, height)
 
-class ClickType(Enum):
+class InteractionType(Enum):
     LEFT = 0
     RIGHT = 1
     MIDDLE = 2
     DOUBLE = 3
 
-class EmuniumBase:
+class AutomationCore:
     def __init__(self):
-
         self.cursor = SystemCursor()
-        self.browser_offsets = ()
-        self.browser_inner_window = ()
+        self.viewport_offsets = ()
+        self.viewport_dimensions = ()
 
-    async def _get_browser_properties_if_not_found(self, screenshot_func):
-        if not self.browser_offsets or not self.browser_inner_window:
+    async def _initialize_viewport_properties(self, screenshot_func):
+        if not self.viewport_offsets or not self.viewport_dimensions:
             with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
                 temp_screen_path = temp_file.name
             if asyncio.iscoroutinefunction(screenshot_func):
@@ -48,21 +47,21 @@ class EmuniumBase:
 
             location = pyautogui.locateOnScreen(temp_screen_path, confidence=0.6)
             if location is not None:
-                self.browser_offsets = (location.left, location.top)
+                self.viewport_offsets = (location.left, location.top)
             else:
-                self.browser_offsets = (0, 0)
-            self.browser_inner_window = get_image_size(temp_screen_path)
+                self.viewport_offsets = (0, 0)
+            self.viewport_dimensions = _get_image_dimensions(temp_screen_path)
             os.remove(temp_screen_path)
 
-    def _get_center(self, element_location, element_size):
-        offset_to_screen_x, offset_to_screen_y = self.browser_offsets if self.browser_offsets else (0, 0)
-        element_x = element_location["x"] + offset_to_screen_x
-        element_y = element_location["y"] + offset_to_screen_y
+    def _calculate_center_point(self, element_location, element_size):
+        offset_x, offset_y = self.viewport_offsets if self.viewport_offsets else (0, 0)
+        element_x = element_location["x"] + offset_x
+        element_y = element_location["y"] + offset_y
         centered_x = element_x + (element_size["width"] // 2)
         centered_y = element_y + (element_size["height"] // 2)
         return {"x": centered_x, "y": centered_y}
 
-    def _move(self, center, offset_x=None, offset_y=None):
+    def _move_cursor(self, center, offset_x=None, offset_y=None):
         if offset_x is None:
             offset_x = random.uniform(0.0, 1.5)
         if offset_y is None:
@@ -71,20 +70,19 @@ class EmuniumBase:
         target_y = round(center["y"] + offset_y)
         self.cursor.move_to([target_x, target_y])
 
-    def _click(self, coordinate, click_type=ClickType.LEFT, click_duration=0):
-        if click_type == ClickType.LEFT:
+    def _perform_click(self, coordinate, click_type=InteractionType.LEFT, click_duration=0):
+        if click_type == InteractionType.LEFT:
             self.cursor.click_on(coordinate, click_duration=click_duration)
-        elif click_type == ClickType.RIGHT:
+        elif click_type == InteractionType.RIGHT:
             pyautogui.click(x=coordinate[0], y=coordinate[1], button="right")
-        elif click_type == ClickType.MIDDLE:
+        elif click_type == InteractionType.MIDDLE:
             pyautogui.click(x=coordinate[0], y=coordinate[1], button="middle")
-        elif click_type == ClickType.DOUBLE:
-
+        elif click_type == InteractionType.DOUBLE:
             self.cursor.click_on(coordinate)
             time.sleep(0.1)
             self.cursor.click_on(coordinate)
 
-    def _silent_type(self, text, characters_per_minute=280, offset=20):
+    def _simulate_typing(self, text, characters_per_minute=280, offset=20):
         time_per_char = 60 / characters_per_minute
         for char in text:
             randomized_offset = random.uniform(-offset, offset) / 1000
@@ -95,9 +93,9 @@ class EmuniumBase:
                 keyboard.write(char)
             time.sleep(delay)
 
-    def _scroll_smoothly_to_element(self, element_rect):
-        if self.browser_inner_window:
-            window_width, window_height = self.browser_inner_window
+    def _smooth_scroll(self, element_rect):
+        if self.viewport_dimensions:
+            window_width, window_height = self.viewport_dimensions
         else:
             screen_size = pyautogui.size()
             window_width, window_height = screen_size.width, screen_size.height
@@ -116,4 +114,4 @@ class EmuniumBase:
             time.sleep(random.uniform(0.05, 0.1))
 
     def drag_and_drop(self, start_coords, end_coords):
-        self.cursor.drag_and_drop(start_coords, end_coords)
+        self.cursor.drag_and_drop(start_coords, end_coords) 

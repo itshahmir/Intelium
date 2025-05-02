@@ -1,0 +1,218 @@
+Metadata-Version: 2.1
+Name: intelium
+Version: 2.1.0
+Summary: A Python module for automating interactions to mimic human behavior in standalone apps or browsers when using Selenium, Pyppeteer, or Playwright.
+Home-page: https://github.com/DedInc/intelium
+Author: Maehdakvan
+Author-email: visitanimation@google.com
+Project-URL: Bug Tracker, https://github.com/DedInc/intelium/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: asyncio
+Requires-Dist: HumanCursor
+Requires-Dist: keyboard
+
+# 🤖 Intelium
+
+Intelium is a Python module that helps you automate interactions in a human-like way. It works with standalone applications or browsers when using Selenium, Pyppeteer, or Playwright. Intelium makes the mouse movements, clicks, typing, and scrolling appear more natural, which can help your tests avoid detection.
+
+![Intelium preview](https://raw.githubusercontent.com/DedInc/intelium/main/preview.gif)
+
+---
+
+## 🚀 Quickstart (Standalone)
+
+Below is a basic example that shows how to search for an image on your screen, type some text, and click a button. This example uses standalone mode.
+
+```python
+from intelium import Intelium, ClickType
+
+# Create an instance of Intelium
+intelium = Intelium()
+
+# Find a text field on the screen using an image of the field
+elements = intelium.find_elements('field.png', min_confidence=0.8)
+
+# Type into the first found element
+intelium.type_at(elements[0], 'Automating searches')
+
+# Find the search icon using an image and click it
+elements = intelium.find_elements('search_icon.png', min_confidence=0.8)
+intelium.click_at(elements[0])
+```
+
+---
+
+## 🔍 OCR Text Search (only in Standalone)
+
+Intelium can also search for text on the screen using Optical Character Recognition (OCR). To use this feature, create your Intelium instance with OCR enabled. This uses [EasyOCR](https://github.com/JaidedAI/EasyOCR) under the hood.
+
+### How It Works
+
+The new `find_text_elements()` method scans the screen for text that matches your query. You can adjust the minimum confidence and limit the number of results.
+
+### Example
+
+```python
+from intelium import Intelium
+
+# Create an Intelium instance with OCR enabled.
+intelium = Intelium(ocr=True, use_gpu=True, langs=['en']) # use_gpu is default True, langs is default ['en'], ocr is default False
+
+# Search for text that contains the word "Submit"
+text_elements = intelium.find_text_elements('Submit', min_confidence=0.8) # min_confidence is default 0.8
+
+# If the text is found, click on the first occurrence.
+if text_elements:
+    intelium.click_at(text_elements[0])
+```
+
+*Note:* Make sure you have EasyOCR installed by running `pip install easyocr` before using the OCR feature.
+
+---
+
+Quickstarts for one of more cases. The code below opens DuckDuckGo, types a query, and clicks the search button.
+
+## 🚀 Quickstart (with Selenium)
+
+```python
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from intelium import InteliumSelenium
+
+driver = webdriver.Chrome()
+wait = WebDriverWait(driver, 10)
+intelium = InteliumSelenium(driver)
+
+driver.get('https://duckduckgo.com/')
+
+# Wait for the search field to be clickable and type your query
+element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-state="suggesting"]')))
+intelium.type_at(element, 'Automating searches')
+
+# Find and click the search button
+submit = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[aria-label="Search"]')))
+intelium.click_at(submit)
+
+driver.quit()
+```
+
+---
+
+## 🚀 Quickstart (with Pyppeteer)
+
+```python
+import asyncio
+from pyppeteer import launch
+from intelium import InteliumPpeteer
+
+async def main():
+    browser = await launch(headless=False)
+    page = await browser.newPage()
+    intelium = InteliumPpeteer(page)
+
+    await page.goto('https://duckduckgo.com/')
+
+    element = await page.waitForSelector('[data-state="suggesting"]')
+    await intelium.type_at(element, 'Automating searches')
+
+    submit = await page.waitForSelector('[aria-label="Search"]')
+    await intelium.click_at(submit)
+
+    await browser.close()
+
+asyncio.run(main())
+```
+
+---
+
+## 🚀 Quickstart (with Playwright)
+
+
+```python
+import asyncio
+from playwright.async_api import async_playwright
+from intelium import InteliumPlaywright
+
+async def main():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=False)
+        page = await browser.new_page()
+        intelium = InteliumPlaywright(page)
+
+        await page.goto('https://duckduckgo.com/')
+
+        element = await page.wait_for_selector('[data-state="suggesting"]')
+        await intelium.type_at(element, 'Automating searches')
+
+        submit = await page.wait_for_selector('[aria-label="Search"]')
+        await intelium.click_at(submit)
+
+        await browser.close()
+
+asyncio.run(main())
+```
+
+---
+
+## 🖱️ Mouse Movements and Clicks
+
+Intelium simulates natural mouse movements and clicks:
+
+- **Moving the Mouse:**
+  The `move_to()` method moves the cursor smoothly to the target position. You can add small random offsets for a more human-like behavior.
+
+- **Clicking Elements:**
+  Use `click_at()` to click on an element after moving to it. You can specify the type of click (left, right, middle, or double):
+
+  ```python
+  from intelium import ClickType
+
+  intelium.click_at(element)                    # left click
+  intelium.click_at(element, ClickType.RIGHT)   # right click
+  intelium.click_at(element, ClickType.MIDDLE)  # middle click
+  intelium.click_at(element, ClickType.DOUBLE)  # double click
+  ```
+
+---
+
+## 🔎 Finding Elements on the Screen (only in Standalone)
+
+Intelium uses image matching to find elements:
+
+- **find_elements():**
+  Locate elements on the screen using an image file.
+
+  ```python
+  elements = intelium.find_elements('search_icon.png', min_confidence=0.8)
+  ```
+
+  You can also set target sizes and limit the number of elements found.
+
+---
+
+## ⌨️ Typing Text
+
+The `type_at()` method moves to an element, clicks on it, and types text in a "silent" way. This method mimics human typing by spreading out key presses with small, random delays.
+
+Options include:
+- `characters_per_minute`: Typing speed (default is 280 CPM).
+- `offset`: Random delay (default is 20ms).
+
+---
+
+## 📜 Scrolling Pages
+
+The `scroll_to()` method scrolls smoothly to bring an element into view. It uses timeouts and checks to ensure smooth scrolling even when there are minor hiccups.
+
+---
+
+## 🏁 Conclusion
+
+Intelium provides a set of easy-to-use tools for automating user interactions. Whether you need to automate clicks, type text, or even search for text on your screen using OCR, Intelium offers flexible solutions for both browser and standalone applications. Its human-like behavior helps make your tests more robust and less likely to be detected as automation.

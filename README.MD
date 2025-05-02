@@ -1,200 +1,164 @@
-# 🤖 Emunium
+# Intelium: Universal Automation Framework
 
-Emunium is a Python module that helps you automate interactions in a human-like way. It works with standalone applications or browsers when using Selenium, Pyppeteer, or Playwright. Emunium makes the mouse movements, clicks, typing, and scrolling appear more natural, which can help your tests avoid detection.
+![Intelium Preview](preview.gif)
 
-![Emunium preview](https://raw.githubusercontent.com/DedInc/emunium/main/preview.gif)
+## 🚀 Vision
 
----
+Intelium is not just another automation framework - it's a vision for a world where any digital interaction can be automated with human-like precision. Whether you're automating browser interactions, desktop applications, or complex workflows, Intelium provides a unified, intelligent approach to automation that feels natural and reliable.
 
-## 🚀 Quickstart (Standalone)
+## ✨ Key Features
 
-Below is a basic example that shows how to search for an image on your screen, type some text, and click a button. This example uses standalone mode.
+### 🤖 Human-Like Interactions
+- Natural mouse movements with randomized offsets
+- Variable typing speeds with realistic timing
+- Smooth scrolling with acceleration/deceleration
+- Intelligent element detection with tolerance for visual variations
 
-```python
-from emunium import Emunium, ClickType
+### 🌐 Universal Automation
+- **Browser Automation**: Support for Selenium, Playwright, and more
+- **Desktop Automation**: Native system interactions with OCR capabilities
+- **Cross-Platform**: Works seamlessly across Windows, macOS, and Linux
+- **Extensible**: Easy to add support for new automation targets
 
-# Create an instance of Emunium
-emunium = Emunium()
+### 🎯 Smart Element Detection
+- Template matching with scale and rotation tolerance
+- OCR-powered text detection (optional)
+- Confidence-based matching
+- Duplicate detection and filtering
 
-# Find a text field on the screen using an image of the field
-elements = emunium.find_elements('field.png', min_confidence=0.8)
+### ⚡ Performance & Reliability
+- Asynchronous operation support
+- Robust error handling
+- Viewport-aware interactions
+- Resource-efficient operation
 
-# Type into the first found element
-emunium.type_at(elements[0], 'Automating searches')
-
-# Find the search icon using an image and click it
-elements = emunium.find_elements('search_icon.png', min_confidence=0.8)
-emunium.click_at(elements[0])
-```
-
----
-
-## 🔍 OCR Text Search (only in Standalone)
-
-Emunium can also search for text on the screen using Optical Character Recognition (OCR). To use this feature, create your Emunium instance with OCR enabled. This uses [EasyOCR](https://github.com/JaidedAI/EasyOCR) under the hood.
-
-### How It Works
-
-The new `find_text_elements()` method scans the screen for text that matches your query. You can adjust the minimum confidence and limit the number of results.
-
-### Example
+## 🛠️ Quick Start
 
 ```python
-from emunium import Emunium
+from intelium import DesktopAutomation, BrowserAutomation
 
-# Create an Emunium instance with OCR enabled.
-emunium = Emunium(ocr=True, use_gpu=True, langs=['en']) # use_gpu is default True, langs is default ['en'], ocr is default False
+# Desktop Automation
+desktop = DesktopAutomation()
+desktop.move_to({'x': 100, 'y': 100})
+desktop.click_at({'x': 100, 'y': 100})
 
-# Search for text that contains the word "Submit"
-text_elements = emunium.find_text_elements('Submit', min_confidence=0.8) # min_confidence is default 0.8
-
-# If the text is found, click on the first occurrence.
-if text_elements:
-    emunium.click_at(text_elements[0])
-```
-
-*Note:* Make sure you have EasyOCR installed by running `pip install easyocr` before using the OCR feature.
-
----
-
-Quickstarts for one of more cases. The code below opens DuckDuckGo, types a query, and clicks the search button.
-
-## 🚀 Quickstart (with Selenium)
-
-```python
+# Browser Automation
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from emunium import EmuniumSelenium
+driver = webdriver.Chrome()
+browser = BrowserAutomation(driver)
+element = driver.find_element("id", "my-button")
+browser.click_at(element)
+```
+
+## 🔧 Installation
+
+```bash
+pip install intelium
+```
+
+## 📚 Usage Examples
+
+### Desktop Automation
+```python
+from intelium import DesktopAutomation
+
+# Initialize with OCR support
+automation = DesktopAutomation(ocr=True)
+
+# Find elements by image
+elements = automation.find_elements(
+    image_path="button.png",
+    min_confidence=0.8
+)
+
+# Find elements by text
+text_elements = automation.find_text_elements(
+    query="Click me",
+    min_confidence=0.8
+)
+
+# Interact with elements
+for element in elements:
+    automation.move_to(element)
+    automation.click_at(element)
+    automation.type_at(element, "Hello, World!")
+```
+
+### Browser Automation
+```python
+from intelium import BrowserAutomation
+from selenium import webdriver
 
 driver = webdriver.Chrome()
-wait = WebDriverWait(driver, 10)
-emunium = EmuniumSelenium(driver)
+automation = BrowserAutomation(driver)
 
-driver.get('https://duckduckgo.com/')
-
-# Wait for the search field to be clickable and type your query
-element = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[data-state="suggesting"]')))
-emunium.type_at(element, 'Automating searches')
-
-# Find and click the search button
-submit = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '[aria-label="Search"]')))
-emunium.click_at(submit)
-
-driver.quit()
+# Navigate and interact
+driver.get("https://example.com")
+element = driver.find_element("id", "search")
+automation.type_at(element, "Search query")
+automation.click_at(element)
 ```
 
----
+## 🎯 Use Cases
 
-## 🚀 Quickstart (with Pyppeteer)
+### 🤖 RPA (Robotic Process Automation)
+- Automate repetitive desktop tasks
+- Fill forms and process documents
+- Extract data from various sources
+- Integrate with existing workflows
 
-```python
-import asyncio
-from pyppeteer import launch
-from emunium import EmuniumPpeteer
+### 🧪 Testing & QA
+- Automated UI testing
+- Cross-browser testing
+- Visual regression testing
+- Performance testing
 
-async def main():
-    browser = await launch(headless=False)
-    page = await browser.newPage()
-    emunium = EmuniumPpeteer(page)
+### 📊 Data Collection
+- Web scraping with human-like behavior
+- Automated data entry
+- Document processing
+- Data extraction from various sources
 
-    await page.goto('https://duckduckgo.com/')
+### 🔄 Workflow Automation
+- Business process automation
+- Task scheduling and execution
+- System integration
+- Automated reporting
 
-    element = await page.waitForSelector('[data-state="suggesting"]')
-    await emunium.type_at(element, 'Automating searches')
+## 🔮 Future Vision
 
-    submit = await page.waitForSelector('[aria-label="Search"]')
-    await emunium.click_at(submit)
+Intelium is constantly evolving to support:
+- AI-powered element detection
+- Natural language automation commands
+- Cross-device automation
+- Cloud-based automation orchestration
+- Advanced pattern recognition
+- Machine learning for interaction optimization
 
-    await browser.close()
+## 🤝 Contributing
 
-asyncio.run(main())
-```
+We welcome contributions! Whether it's:
+- Bug reports
+- Feature requests
+- Code contributions
+- Documentation improvements
+- Testing and feedback
 
----
+## 📄 License
 
-## 🚀 Quickstart (with Playwright)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🌟 Why Intelium?
 
-```python
-import asyncio
-from playwright.async_api import async_playwright
-from emunium import EmuniumPlaywright
+In a world where automation is becoming increasingly important, Intelium stands out by:
+1. Providing a unified interface for all automation needs
+2. Focusing on human-like interactions
+3. Supporting multiple platforms and technologies
+4. Being easy to use yet powerful
+5. Embracing modern automation practices
 
-async def main():
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False)
-        page = await browser.new_page()
-        emunium = EmuniumPlaywright(page)
-
-        await page.goto('https://duckduckgo.com/')
-
-        element = await page.wait_for_selector('[data-state="suggesting"]')
-        await emunium.type_at(element, 'Automating searches')
-
-        submit = await page.wait_for_selector('[aria-label="Search"]')
-        await emunium.click_at(submit)
-
-        await browser.close()
-
-asyncio.run(main())
-```
-
----
-
-## 🖱️ Mouse Movements and Clicks
-
-Emunium simulates natural mouse movements and clicks:
-
-- **Moving the Mouse:**
-  The `move_to()` method moves the cursor smoothly to the target position. You can add small random offsets for a more human-like behavior.
-
-- **Clicking Elements:**
-  Use `click_at()` to click on an element after moving to it. You can specify the type of click (left, right, middle, or double):
-
-  ```python
-  from emunium import ClickType
-
-  emunium.click_at(element)                    # left click
-  emunium.click_at(element, ClickType.RIGHT)   # right click
-  emunium.click_at(element, ClickType.MIDDLE)  # middle click
-  emunium.click_at(element, ClickType.DOUBLE)  # double click
-  ```
+Join us in building the future of automation!
 
 ---
 
-## 🔎 Finding Elements on the Screen (only in Standalone)
-
-Emunium uses image matching to find elements:
-
-- **find_elements():**
-  Locate elements on the screen using an image file.
-
-  ```python
-  elements = emunium.find_elements('search_icon.png', min_confidence=0.8)
-  ```
-
-  You can also set target sizes and limit the number of elements found.
-
----
-
-## ⌨️ Typing Text
-
-The `type_at()` method moves to an element, clicks on it, and types text in a "silent" way. This method mimics human typing by spreading out key presses with small, random delays.
-
-Options include:
-- `characters_per_minute`: Typing speed (default is 280 CPM).
-- `offset`: Random delay (default is 20ms).
-
----
-
-## 📜 Scrolling Pages
-
-The `scroll_to()` method scrolls smoothly to bring an element into view. It uses timeouts and checks to ensure smooth scrolling even when there are minor hiccups.
-
----
-
-## 🏁 Conclusion
-
-Emunium provides a set of easy-to-use tools for automating user interactions. Whether you need to automate clicks, type text, or even search for text on your screen using OCR, Emunium offers flexible solutions for both browser and standalone applications. Its human-like behavior helps make your tests more robust and less likely to be detected as automation.
+Made with ❤️ by the Leadrive in Pakistan

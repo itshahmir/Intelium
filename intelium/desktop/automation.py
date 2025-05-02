@@ -2,9 +2,9 @@ import random
 import pyautogui
 import cv2
 import numpy as np
-from .base import EmuniumBase, ClickType
+from ..core.automation import AutomationCore, InteractionType
 
-class Emunium(EmuniumBase):
+class DesktopAutomation(AutomationCore):
     def __init__(self, ocr=False, use_gpu=True, langs=['en']):
         super().__init__()
         self.ocr = ocr
@@ -29,7 +29,7 @@ class Emunium(EmuniumBase):
                     gpu_flag = False
                 self.ocr_reader = Reader(langs, gpu=gpu_flag)
 
-    def transform_template(self, template, scale, angle, contrast):
+    def _transform_template(self, template, scale, angle, contrast):
         height, width = template.shape[:2]
         new_width = int(width * scale)
         new_height = int(height * scale)
@@ -66,7 +66,7 @@ class Emunium(EmuniumBase):
         for scale in scale_factors:
             for angle in rotation_angles:
                 for contrast in contrast_factors:
-                    transformed = self.transform_template(template_original, scale, angle, contrast)
+                    transformed = self._transform_template(template_original, scale, angle, contrast)
                     tH, tW = transformed.shape[:2]
 
                     if target_height is not None and target_width is not None:
@@ -109,7 +109,7 @@ class Emunium(EmuniumBase):
 
     def find_text_elements(self, query, min_confidence=0.8, max_elements=0, region=None):
         if not self.ocr:
-            raise ImportError("OCR is disabled. Please use Emunium(ocr=True) instance")
+            raise ImportError("OCR is disabled. Please use DesktopAutomation(ocr=True) instance")
         if self.ocr_reader is None:
             raise ImportError("EasyOCR is not installed. Please install it using: pip install easyocr")
 
@@ -136,14 +136,14 @@ class Emunium(EmuniumBase):
         return found
 
     def move_to(self, element_center, offset_x=random.uniform(0.0, 1.5), offset_y=random.uniform(0.0, 1.5)):
-        self._move(element_center, offset_x, offset_y)
+        self._move_cursor(element_center, offset_x, offset_y)
 
-    def click_at(self, element_center, click_type=ClickType.LEFT):
-        self._click([element_center['x'], element_center['y']], click_type=click_type)
+    def click_at(self, element_center, click_type=InteractionType.LEFT):
+        self._perform_click([element_center['x'], element_center['y']], click_type=click_type)
 
-    def type_at(self, element_center, text, characters_per_minute=280, offset=20, click_type=ClickType.LEFT):
-        self._click([element_center['x'], element_center['y']], click_type=click_type)
-        self._silent_type(text, characters_per_minute, offset)
+    def type_at(self, element_center, text, characters_per_minute=280, offset=20, click_type=InteractionType.LEFT):
+        self._perform_click([element_center['x'], element_center['y']], click_type=click_type)
+        self._simulate_typing(text, characters_per_minute, offset)
 
     def scroll_to(self, element_center):
-        self._scroll_smoothly_to_element(element_center)
+        self._smooth_scroll(element_center) 

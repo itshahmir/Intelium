@@ -1,0 +1,13 @@
+LICENSE
+MANIFEST.in
+README.MD
+setup.py
+intelium/__init__.py
+intelium/base.py
+intelium/browsers.py
+intelium/standalone.py
+intelium.egg-info/PKG-INFO
+intelium.egg-info/SOURCES.txt
+intelium.egg-info/dependency_links.txt
+intelium.egg-info/requires.txt
+intelium.egg-info/top_level.txt
