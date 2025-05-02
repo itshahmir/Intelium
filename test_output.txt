@@ -1,0 +1,36 @@
+Starting Intelium tests...
+Testing standalone functionality...
+Testing mouse movement...
+Testing clicking...
+Standalone tests completed!
+
+==================================================
+
+Testing Selenium integration...
+
+Test failed with error: Message: session not created: This version of ChromeDriver only supports Chrome version 127
+Current browser version is 135.0.7049.116 with binary path C:\Program Files\Google\Chrome\Application\chrome.exe
+Stacktrace:
+	GetHandleVerifier [0x00007FF707BE9632+30946]
+	(No symbol) [0x00007FF707B9E3C9]
+	(No symbol) [0x00007FF707A96FDA]
+	(No symbol) [0x00007FF707AD7341]
+	(No symbol) [0x00007FF707AD6598]
+	(No symbol) [0x00007FF707AD148D]
+	(No symbol) [0x00007FF707ACC4FA]
+	(No symbol) [0x00007FF707B178B9]
+	(No symbol) [0x00007FF707B16F20]
+	(No symbol) [0x00007FF707B0C813]
+	(No symbol) [0x00007FF707ADA6E5]
+	(No symbol) [0x00007FF707ADB021]
+	GetHandleVerifier [0x00007FF707D1F83D+1301229]
+	GetHandleVerifier [0x00007FF707D2BDB7+1351783]
+	GetHandleVerifier [0x00007FF707D22A03+1313971]
+	GetHandleVerifier [0x00007FF707C1DD06+245686]
+	(No symbol) [0x00007FF707BA758F]
+	(No symbol) [0x00007FF707BA3804]
+	(No symbol) [0x00007FF707BA3992]
+	(No symbol) [0x00007FF707B9A3EF]
+	BaseThreadInitThunk [0x00007FFCBDD953E0+16]
+	RtlUserThreadStart [0x00007FFCBEB4485B+43]
+
