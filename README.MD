@@ -146,19 +146,19 @@ We welcome contributions! Whether it's:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is dual-licensed under:
+1. MIT License - for general use and distribution
+2. Intelium Attribution License - requiring proper attribution
 
-## 🌟 Why Intelium?
+The MIT License allows you to use, modify, and distribute the software freely, while the Intelium Attribution License ensures proper credit is given to the original authors. See the [LICENSE](LICENSE) file for full details.
 
-In a world where automation is becoming increasingly important, Intelium stands out by:
-1. Providing a unified interface for all automation needs
-2. Focusing on human-like interactions
-3. Supporting multiple platforms and technologies
-4. Being easy to use yet powerful
-5. Embracing modern automation practices
-
-Join us in building the future of automation!
+When using Intelium, you must include the following attribution in your project:
+```
+This project uses Intelium (https://github.com/Leadrive/intelium), 
+developed by Ali Shahmir Khan, based on the original work by Vladislav Zenkevich.
+```
 
 ---
 
-Made with ❤️ by the Leadrive in Pakistan
+Made with ❤️ by Ali Shahmir Khan
+Original Author: Vladislav Zenkevich

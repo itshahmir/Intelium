@@ -1,4 +1,7 @@
-Copyright (c) 2024-2025 Vladislav Zenkevich
+MIT License
+
+Copyright (c) 2024 Ali Shahmir Khan
+Original Author: Vladislav Zenkevich
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -17,3 +20,41 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+Intelium Attribution License
+
+Copyright (c) 2024 Ali Shahmir Khan
+Original Author: Vladislav Zenkevich
+
+This software includes Intelium, a universal automation framework. When using Intelium
+or any of its components, you must:
+
+1. Include the following attribution in your project's documentation, README, or
+   about section:
+   "This project uses Intelium (https://github.com/Leadrive/intelium), 
+   developed by Ali Shahmir Khan, based on the original work by Vladislav Zenkevich."
+
+2. If you modify or distribute Intelium:
+   a) Maintain all existing copyright notices
+   b) Add your own copyright notice
+   c) Include a prominent notice stating that you modified the software
+   d) Include the original copyright notice and this license
+
+3. If you use Intelium in a commercial product:
+   a) Include the attribution in your product's documentation
+   b) Include the attribution in your product's about/credits section
+   c) If your product has a website, include the attribution there
+
+4. If you use Intelium in a research project:
+   a) Cite Intelium in your publications
+   b) Include the attribution in your project documentation
+   c) Reference the original repository
+
+The above requirements are in addition to the MIT License terms above. This license
+does not restrict your ability to use, modify, or distribute the software under
+the MIT License terms, but adds the requirement for proper attribution.
+
+For any questions about attribution requirements, please contact:
+https://github.com/itshahmir/intelium
